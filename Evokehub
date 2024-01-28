@@ -1,3 +1,15 @@
+local isOpen = false
+
+local function toggleGUI()
+    if isOpen then
+        Window:Toggle()
+    else
+        Window:Toggle()
+    end
+    isOpen = not isOpen
+end
+
+-- Função para ajustar a velocidade
 local function adjustSpeed(value)
     local player = game.Players.LocalPlayer
     local character = player.Character
@@ -11,11 +23,18 @@ local function adjustSpeed(value)
     end
 end
 
+-- Adiciona um botão no GUI para ajustar a velocidade
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/kav"))()
-local Window = Library.CreateLib("Evokehub", "DarkTheme")
-local Tab = Window:NewTab("funções")
-local Section = Tab:NewSection("troll")
+local Window = Library.CreateLib("EvokeHub", "DarkTheme")
+local Tab = Window:NewTab("Configurações")
+local Section = Tab:NewSection("Opções")
 
 local speedTextBox = Section:NewTextBox("Speed", "Digite a velocidade", function(value)
     adjustSpeed(value)
 end)
+
+-- Adiciona um botão fora do GUI para abrir/fechar
+local toggleButton = Library:CreateButton("Toggle UI", UDim2.new(0, 200, 0, 50), function()
+    toggleGUI()
+end)
+toggleButton.Parent = game.CoreGui
