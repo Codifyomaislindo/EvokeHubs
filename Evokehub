@@ -1,4 +1,3 @@
--- Função para ajustar a velocidade
 local function adjustSpeed(value)
     local player = game.Players.LocalPlayer
     local character = player.Character
@@ -10,11 +9,10 @@ local function adjustSpeed(value)
         end
     end
 end
--- Adiciona um botão no GUI para ajustar a velocidade
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/EvokeX/EvokeHubs/main/Evokehub"))()
-local Window = Library.CreateLib("Meu GUI", "DarkTheme")
-local Tab = Window:NewTab("Configurações")
-local Section = Tab:NewSection("Opções")
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/bloodball/UI-Librarys/main/Kavo"))()
+local Window = Library.CreateLib("EvokeHub", "DarkTheme")
+local Tab = Window:NewTab("funções")
+local Section = Tab:NewSection("troll")
 local speedTextBox = Section:NewTextBox("Speed", "Digite a velocidade", function(value)
     adjustSpeed(value)
 end)
