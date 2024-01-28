@@ -1,0 +1,20 @@
+-- Função para ajustar a velocidade
+local function adjustSpeed(value)
+    local player = game.Players.LocalPlayer
+    local character = player.Character
+    local humanoid = character and character:FindFirstChild("Humanoid")
+    if humanoid then
+        local numericValue = tonumber(value)
+        if numericValue then
+            humanoid.WalkSpeed = numericValue
+        end
+    end
+end
+-- Adiciona um botão no GUI para ajustar a velocidade
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/kav"))()
+local Window = Library.CreateLib("Meu GUI", "DarkTheme")
+local Tab = Window:NewTab("Configurações")
+local Section = Tab:NewSection("Opções")
+local speedTextBox = Section:NewTextBox("Speed", "Digite a velocidade", function(value)
+    adjustSpeed(value)
+end)
