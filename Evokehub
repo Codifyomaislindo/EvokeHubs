@@ -2,6 +2,7 @@ local function adjustSpeed(value)
     local player = game.Players.LocalPlayer
     local character = player.Character
     local humanoid = character and character:FindFirstChild("Humanoid")
+
     if humanoid then
         local numericValue = tonumber(value)
         if numericValue then
@@ -9,10 +10,12 @@ local function adjustSpeed(value)
         end
     end
 end
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/bloodball/UI-Librarys/main/Kavo"))()
-local Window = Library.CreateLib("EvokeHub", "DarkTheme")
+
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/kav"))()
+local Window = Library.CreateLib("Evokehub", "DarkTheme")
 local Tab = Window:NewTab("funções")
 local Section = Tab:NewSection("troll")
+
 local speedTextBox = Section:NewTextBox("Speed", "Digite a velocidade", function(value)
     adjustSpeed(value)
 end)
