@@ -33,116 +33,108 @@ MinimizeButton({
 -- Adicionando uma nova aba chamada "Main"
 local MainTab = MakeTab({Name = "Main"})
 
--- Adicionando uma nova seção "Main"
+-- Adicionando uma nova seção "Mainx
 local MainSection = AddSection(MainTab, {"Main"})
 
 -- Adicionando um botão na nova seção "Main"
 local MainButton = AddButton(MainSection, {
-  Name = "Auto Parry",
+  Name = "auto parry",
   Callback = function()
-    print("Auto Parry ativado!")
-
-    local workspace = game:GetService("Workspace")
-    local players = game:GetService("Players")
-    local runService = game:GetService("RunService")
-    local vim = game:GetService("VirtualInputManager")
-
-    local ballFolder = workspace.Balls
-    local indicatorPart = Instance.new("Part")
-    indicatorPart.Size = Vector3.new(5, 5, 5)
-    indicatorPart.Anchored = true
-    indicatorPart.CanCollide = false
-    indicatorPart.Transparency = 1
-    indicatorPart.BrickColor = BrickColor.new("Bright red")
-    indicatorPart.Parent = workspace
-
-    local lastBallPressed = nil
-    local isKeyPressed = false
-
-    local function calculatePredictionTime(ball, player)
-        if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-            local rootPart = player.Character.HumanoidRootPart
-            local relativePosition = ball.Position - rootPart.Position
-            local velocity = ball.Velocity + rootPart.Velocity 
-            local a = (ball.Size.magnitude / 2) 
-            local b = relativePosition.magnitude
-            local c = math.sqrt(a * a + b * b)
-            local timeToCollision = (c - a) / velocity.magnitude
-            return timeToCollision
-        end
-        return math.huge
-    end
-
-    local function updateIndicatorPosition(ball)
-        indicatorPart.Position = ball.Position
-    end
-
-    local function checkProximityToPlayer(ball, player)
-        local predictionTime = calculatePredictionTime(ball, player)
-        local realBallAttribute = ball:GetAttribute("realBall")
-        local target = ball:GetAttribute("target")
-        
-        local ballSpeedThreshold = math.max(0.4, 0.6 - ball.Velocity.magnitude * 0.01)
-
-        if predictionTime <= ballSpeedThreshold and realBallAttribute == true and target == player.Name and not isKeyPressed then
-            vim:SendKeyEvent(true, Enum.KeyCode.F, false, nil)
-            wait(0.005)
-            vim:SendKeyEvent(false, Enum.KeyCode.F, false, nil)
-            lastBallPressed = ball
-            isKeyPressed = true
-        elseif lastBallPressed == ball and (predictionTime > ballSpeedThreshold or realBallAttribute ~= true or target ~= player.Name) then
-            -- Adicione qualquer lógica adicional aqui, se necessário
-        end
-    end
-
-    -- Adicione aqui o código para verificar a proximidade do jogador com as bolas no Workspace
-    -- Exemplo:
-    for _, ball in ipairs(ballFolder:GetChildren()) do
-        if ball:IsA("BallClass") then
-            checkProximityToPlayer(ball, players.LocalPlayer)
-        end
-    end
+    print("Botão Main clicado!")
+    -- Adicione a lógica desejada aqui
   end
 })
 
--- Adicionando uma nova aba chamada "FPS"
-local FPSTab = MakeTab({Name = "FPS"})
+-- Adicionando uma nova aba chamada "Settings"
+local SettingsTab = MakeTab({Name = "Settings"})
 
--- Adicionando uma nova seção "ESP" na aba "FPS"
-local ESPSection = AddSection(FPSTab, {"ESP"})
+-- Adicionando uma nova seção "ESP Settings" na aba "Settings"
+local ESPSettingsSection = AddSection(SettingsTab, {"ESP Settings"})
 
--- Adicionando um botão na nova seção "ESP"
-local ESPButton = AddButton(ESPSection, {
+-- Adicionando um botão na nova seção "ESP Settings"
+local ESPButton = AddButton(ESPSettingsSection, {
   Name = "Ativar ESP",
   Callback = function()
-    local Players = game:GetService("Players")
-    local LocalPlayer = Players.LocalPlayer
-    local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
-    local ScreenGui = Instance.new("ScreenGui", PlayerGui)
-    ScreenGui.Enabled = false
+    local targetGameName = "Blox Fruits"
+    local targetsNames = {["Fruit"] = true, ["Fruit "] = true}
 
-    local function DrawPlayers()
-        for _, player in pairs(Players:GetPlayers()) do
-            if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-                local HumanoidRootPart = player.Character.HumanoidRootPart
-                local BillboardGui = Instance.new("BillboardGui", ScreenGui)
-                BillboardGui.Adornee = HumanoidRootPart
-                BillboardGui.Size = UDim2.new(0, 5, 0, 5)
-                BillboardGui.StudsOffset = Vector3.new(0, 3, 0)
-                BillboardGui.AlwaysOnTop = true
-                BillboardGui.Enabled = true
+    local gameName = string.sub(game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name, 1, #targetGameName)
+    local playerGui = game.Players.LocalPlayer.PlayerGui
 
-                local ImageLabel = Instance.new("ImageLabel", BillboardGui)
-                ImageLabel.BackgroundTransparency = 1
-                ImageLabel.Size = UDim2.new(1, 0, 1, 0)
-                ImageLabel.Image = "rbxassetid://3570695787"
-                ImageLabel.ImageColor3 = Color3.new(0, 1, 0)
-            end
-        end
+    -- Creates a screen gui for our script stuff
+    local function createGui()
+        local gui = Instance.new("ScreenGui")
+        gui.Name = "scrGui"
+        gui.Parent = playerGui
     end
 
-    DrawPlayers()
-  end
-})
+    -- The switch to turn the ESP on/off
+    local function createSwitch()
+        local switch
 
--- ... (código existente)
+        if (gameName == "Blox Fruits") then
+            -- The settings image button at the right on Blox Fruits
+            local settings = playerGui.Main.Settings
+
+            -- Creates the ESP switch by making a copy of an existent one
+            switch = settings.DmgCounterButton:Clone()
+            switch.Notify.Text = "Shows where targets are located"
+            switch.Position = UDim2.new(-1.2, 0, -4.03, 0) -- Above counter switch
+            switch.Size = UDim2.new(5, 0, 0.8, 0) -- Similar size to the other switches
+            switch.Parent = settings
+
+            -- Shows/hide the switch when settings image button is clicked
+            settings.Activated:Connect(function()
+                if (switch.Visible) then
+                    switch.Visible = false
+                else
+                    switch.Visible = true
+                end
+            end)
+        else
+            switch = Instance.new("TextButton")
+            switch.Text = ""
+            switch.BackgroundColor3 = Color3.fromRGB(255, 255, 55)
+            switch.Position = UDim2.new(0.5, 0, 0, 2)
+            switch.AnchorPoint = Vector2.new (0.5, 0)
+            switch.Size = UDim2.fromOffset(70, 25)
+            switch.Parent = playerGui.scrGui
+
+            local label = Instance.new("TextLabel")
+            label.BorderSizePixel = 0
+            label.Position = UDim2.new(0.5, 0, 0.5, 0)
+            label.AnchorPoint = Vector2.new (0.5, 0)
+            label.Parent = switch
+        end
+
+        switch.Name = "espSwitch"
+        switch.TextLabel.Text = "ESP (OFF)"
+
+        return switch
+    end
+
+    -- Shows temporarily text at the middle of the screen
+    local function toScreen(text, time, color)
+        local time = time or 10
+        local color = color or Color3.fromRGB(255, 255, 255)
+
+        local label = Instance.new("TextLabel")
+        label.Text = text
+        label.TextColor3 = color
+        label.FontSize = Enum.FontSize.Size14
+        label.RichText = true
+        label.BackgroundTransparency = 1
+        label.Position = UDim2.new(0.5, 0, 0.7, 0)
+        label.AnchorPoint = Vector2.new (0.5, 0)
+        label.Size = UDim2.fromOffset(100, 25)
+        label.Parent = playerGui.scrGui
+
+        wait(time)
+
+        label.Text = ""
+    end
+
+    -- Adds text to thing, you can see it through walls (ESP)
+    local function addLabel(thing, name, color)
+        local name = name or thing.Name
+        local color =
